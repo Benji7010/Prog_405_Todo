@@ -1,3 +1,5 @@
+using Todo.Common;
+
 namespace Todo.Test
 {
     public class UnitTest1
@@ -5,7 +7,7 @@ namespace Todo.Test
         [Fact]
         public void Test1()
         {
-
+            Assert.Equal(1, Class1.thing());
         }
     }
 }
