@@ -14,6 +14,20 @@ namespace Todo.Common.Services
     {
         Task CreateTaskAsync(CreateTaskRequest request);
     }
+    public class TaskService : ITaskService
+    {
+        private readonly IFileDataServiceIO fileDataService;
+
+        public TaskService(IFileDataServiceIO fileDataService)
+        {
+            this.fileDataService = fileDataService;
+        }
+        
+        public async Task CreateTaskAsync(CreateTaskRequest request)
+        {
+            await Task.CompletedTask;
+        }
+    }
 
     public interface IDataServiceIO<T, TKey>
     {
@@ -21,7 +35,9 @@ namespace Todo.Common.Services
         Task<T> GetAsync(TKey id);
     }
 
-    public class FileDataServiceIO : IDataServiceIO<TaskModel?, string>
+    public interface IFileDataServiceIO : IDataServiceIO<TaskModel?, string>;
+
+    public class FileDataServiceIO : IFileDataServiceIO
     {
         private readonly string path;
         public FileDataServiceIO(string path) 
@@ -101,11 +117,5 @@ namespace Todo.Common.Services
         }
     }
 
-    public class TaskService : ITaskService
-    {
-        public async Task CreateTaskAsync(CreateTaskRequest request)
-        {
-            await Task.CompletedTask;
-        }
-    }
+    
 }
