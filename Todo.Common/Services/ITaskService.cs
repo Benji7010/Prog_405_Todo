@@ -17,6 +17,7 @@ namespace Todo.Common.Services
     public class TaskService : ITaskService
     {
         private readonly IFileDataServiceIO fileDataService;
+        public string Key { get; private set; }
 
         public TaskService(IFileDataServiceIO fileDataService)
         {
@@ -29,6 +30,11 @@ namespace Todo.Common.Services
             if (modelResult.IsErr())
             {
                 return Result.Err(modelResult.GetErr());
+            }
+            var model = modelResult.GetVal();
+            if (model == null)
+            {
+                return Result<string>.Err("No Model");
             }
             await this.fileDataService.SaveAsync(modelResult.GetVal());
             return Result.Ok();
