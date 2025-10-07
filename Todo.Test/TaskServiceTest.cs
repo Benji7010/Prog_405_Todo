@@ -1,5 +1,6 @@
 ﻿using Todo.Common;
 using Todo.Common.Models;
+using Todo.Common.Requests;
 using Todo.Common.Services;
 
 namespace Todo.Test
@@ -13,10 +14,24 @@ namespace Todo.Test
         }
 
         [Fact]
-        public void CreateTaskSucceeds()
+        public async void CreateTaskSucceeds()
         {
             var taskService = new TaskService(this.service);
+            var happyRequest = new CreateTaskRequest("Test", "Dumb Desc", DateTime.UtcNow.AddDays(1));
+            var createTaskResult = await taskService.CreateTaskAsync(happyRequest);
+            //Get task key
+            string taskKey = "Test";
+            //Use key to find task and update the data.
+            Assert.True(createTaskResult.IsOk());
+        }
 
+        [Fact]
+        public async void UpdateTaskSucceeds()
+        {
+            var taskService = new TaskService(this.service);
+            var happyRequest = new CreateTaskRequest("Test", "Dumb Desc", DateTime.UtcNow.AddDays(1));
+            var createTaskResult = await taskService.CreateTaskAsync(happyRequest);
+            Assert.True(createTaskResult.IsOk());
         }
     }
 
