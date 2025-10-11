@@ -8,6 +8,7 @@ namespace Todo.Test
     public class ClassServiceTest
     {
         private IFileDataServiceIO service;
+
         public ClassServiceTest()
         {
             this.service = new DummyFileDataServiceIO();
@@ -19,9 +20,6 @@ namespace Todo.Test
             var taskService = new TaskService(this.service);
             var happyRequest = new CreateTaskRequest("Test", "Dumb Desc", DateTime.UtcNow.AddDays(1));
             var createTaskResult = await taskService.CreateTaskAsync(happyRequest);
-            //Get task key
-            string taskKey = "Test";
-            //Use key to find task and update the data.
             Assert.True(createTaskResult.IsOk());
         }
 
@@ -31,6 +29,13 @@ namespace Todo.Test
             var taskService = new TaskService(this.service);
             var happyRequest = new CreateTaskRequest("Test", "Dumb Desc", DateTime.UtcNow.AddDays(1));
             var createTaskResult = await taskService.CreateTaskAsync(happyRequest);
+            if (createTaskResult.IsOk())
+            {
+                
+            }
+            //Get task key
+            var model = createTaskResult;
+            //Use key to find task and update the data.
             Assert.True(createTaskResult.IsOk());
         }
     }

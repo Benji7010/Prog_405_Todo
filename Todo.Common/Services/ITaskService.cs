@@ -19,9 +19,9 @@ namespace Todo.Common.Services
         private readonly IFileDataServiceIO fileDataService;
         public string Key { get; private set; }
 
-        public TaskService(IFileDataServiceIO fileDataService)
+        public TaskService(IFileDataServiceIO fDS)
         {
-            this.fileDataService = fileDataService;
+            fileDataService = fDS;
         }
         
         public async Task<Result> CreateTaskAsync(CreateTaskRequest request)
@@ -34,9 +34,9 @@ namespace Todo.Common.Services
             var model = modelResult.GetVal();
             if (model == null)
             {
-                return Result<string>.Err("No Model");
+                return Result.Err("No Model");
             }
-            await this.fileDataService.SaveAsync(modelResult.GetVal());
+            await fileDataService.SaveAsync(modelResult.GetVal());
             return Result.Ok();
         }
     }
