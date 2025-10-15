@@ -42,5 +42,22 @@ namespace Todo.Common.Models
                 DueDate = request.DueDate
             });
         }
+
+        public static Result<TaskModel> UpdateTask(string key, CreateTaskRequest request)
+        {
+            var validationResult = request.IsValid();
+            if (validationResult.IsErr())
+            {
+                return Result<TaskModel>.Err(validationResult.GetErr());
+            }
+
+            return Result<TaskModel>.Ok(new TaskModel
+            {
+                Key = key,
+                Name = request.Name,
+                Description = request.Description,
+                DueDate = request.DueDate
+            });
+        }
     }
 }

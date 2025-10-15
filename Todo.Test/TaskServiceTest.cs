@@ -31,11 +31,14 @@ namespace Todo.Test
             var createTaskResult = await taskService.CreateTaskAsync(happyRequest);
             if (createTaskResult.IsOk())
             {
-                
+                return;
             }
             //Get task key
-            var model = createTaskResult;
+            string? key = createTaskResult.GetVal();
             //Use key to find task and update the data.
+            happyRequest = new CreateTaskRequest("UpdateTest", "Dumber Desc", DateTime.UtcNow.AddDays(1));
+            createTaskResult = await taskService.UpdateTaskAsync(key, happyRequest);
+
             Assert.True(createTaskResult.IsOk());
         }
     }

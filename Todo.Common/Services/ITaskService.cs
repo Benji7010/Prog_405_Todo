@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Todo.Common.Extensions;
 using Todo.Common.Models;
 using Todo.Common.Requests;
-using System.Text.Json;
-using Todo.Common.Extensions;
 
 namespace Todo.Common.Services
 {
     public interface ITaskService
     {
-        Task<Result> CreateTaskAsync(CreateTaskRequest request);
+        Task<Result<string>> CreateTaskAsync(CreateTaskRequest request);
     }
     public class TaskService : ITaskService
     {
@@ -24,20 +25,36 @@ namespace Todo.Common.Services
             fileDataService = fDS;
         }
         
-        public async Task<Result> CreateTaskAsync(CreateTaskRequest request)
+        public async Task<Result<string>> CreateTaskAsync(CreateTaskRequest request)
         {
             var modelResult = TaskModel.CreateTask(request);
             if (modelResult.IsErr())
             {
-                return Result.Err(modelResult.GetErr());
+                return Result<string>.Err(modelResult.GetErr());
             }
             var model = modelResult.GetVal();
             if (model == null)
             {
-                return Result.Err("No Model");
+                return Result<string>.Err("No Model");
             }
             await fileDataService.SaveAsync(modelResult.GetVal());
-            return Result.Ok();
+            return Result<string>.Ok(model.Key);
+        }
+
+        public async Task<Result<string>> UpdateTaskAsync(string key, CreateTaskRequest request)
+        {
+            var modelResult = TaskModel.UpdateTask(key, request);
+            if (modelResult.IsErr())
+            {
+                return Result<string>.Err(modelResult.GetErr());
+            }
+            var model = modelResult.GetVal();
+            if (model == null)
+            {
+                return Result<string>.Err("No Model");
+            }
+            await fileDataService.SaveAsync(modelResult.GetVal());
+            return Result<string>.Ok(model.Key);
         }
     }
     
